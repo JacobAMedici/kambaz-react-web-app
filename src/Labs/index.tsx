@@ -6,7 +6,8 @@ import Lab3 from "./Lab3";
 export default function Labs() {
     return (
         <div>
-            <h1>Labs</h1>
+            <h1>Labs - Web Development</h1>
+            <h3>Jacob A Medici</h3>
             <TOC />
             <Routes>
                 <Route path="/" element={<Navigate to="Lab1" />} />

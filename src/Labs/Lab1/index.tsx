@@ -100,12 +100,59 @@ export default function Lab1() {
                         <td>2/10/21</td>
                         <td>90</td>
                     </tr>
-                    <tr> ...</tr>
+                    <tr>
+                        <td>Q3</td>
+                        <td>JavaScript</td>
+                        <td>2/11/21</td>
+                        <td>91</td>
+                    </tr>
+                    <tr>
+                        <td>Q4</td>
+                        <td>React</td>
+                        <td>2/12/21</td>
+                        <td>92</td>
+                    </tr>
+                    <tr>
+                        <td>Q5</td>
+                        <td>SQLite</td>
+                        <td>2/13/21</td>
+                        <td>93</td>
+                    </tr>
+                    <tr>
+                        <td>Q6</td>
+                        <td>MySQL</td>
+                        <td>2/14/21</td>
+                        <td>94</td>
+                    </tr>
+                    <tr>
+                        <td>Q7</td>
+                        <td>Security</td>
+                        <td>2/15/21</td>
+                        <td>95</td>
+                    </tr>
+                    <tr>
+                        <td>Q8</td>
+                        <td>Protocols</td>
+                        <td>2/16/21</td>
+                        <td>96</td>
+                    </tr>
+                    <tr>
+                        <td>Q9</td>
+                        <td>Project 1 Questions</td>
+                        <td>2/17/21</td>
+                        <td>97</td>
+                    </tr>
+                    <tr>
+                        <td>Q10</td>
+                        <td>Project 2 Questions</td>
+                        <td>2/18/21</td>
+                        <td>98</td>
+                    </tr>
                     </tbody>
                     <tfoot>
                     <tr>
                         <td colSpan={3}>Average</td>
-                        <td>90</td>
+                        <td>94.5</td>
                     </tr>
                     </tfoot>
                 </table>
@@ -147,6 +194,12 @@ export default function Lab1() {
                             id="wd-all-good">
                         Hello World!
                     </button>
+                    <br/>
+
+                    <h5 id="wd-file-upload">File Upload</h5>
+
+                    <input type="file" id="file" name="file"/><br/>
+
                     <h5 id="wd-radio-buttons">Radio buttons</h5>
 
                     <label>Favorite movie genre:</label><br/>
