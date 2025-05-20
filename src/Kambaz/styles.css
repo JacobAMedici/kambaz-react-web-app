@@ -1,0 +1,65 @@
+body   {  margin: 0;  padding: 0;  }
+body * {  font-family: Arial, Helvetica, sans-serif;  }
+
+@media (min-width: 768px) {
+    #wd-kambaz .wd-main-content-offset {
+        padding-left: 140px !important;
+    }
+}
+
+.list-group.wd > .list-group-item.active {
+    color: black;
+    background-color: white;
+    border-left: 3px solid black !important;
+}
+
+.btn-secondary {
+    --bs-btn-color: #000 !important;
+    --bs-btn-bg: #c7cdd1 !important;
+    --bs-btn-border-color: #c7cdd1 !important;
+    --bs-btn-hover-color: #fff !important;
+}
+.bg-secondary {
+    --bs-secondary-rgb: 199, 205, 209;
+}
+.list-group-item {
+    --bs-list-group-border-color: gray;
+}
+.wd-lesson {
+    border-left: 3px solid green !important;
+}
+
+/* This code (.search-container, .search-icon, and .wd-search-icon-box) were provided by ChatGPT
+and used in order to get the icon for the search bar inside of the box */
+.search-container {
+    position: relative;
+}
+.search-icon {
+    position: absolute;
+    top: 13px;
+    left: 12px;
+    color: #888;
+    font-size: 16px;
+    pointer-events: none;
+}
+.wd-search-icon-box {
+    width: 100%;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    padding: 8px 20px 8px 40px; /* extra left padding for the icon */
+}
+
+.wd-pill {
+    border-radius: 20px;
+    border-width: 2px;
+    border-color: #212529;
+    border-style: solid;
+    padding: 5px;
+    font-size: 14px;
+    /* I wasn't sure how to make the bubble wrap around the text so I asked ChatGPT and it gave me the
+    following line */
+    display: inline-block;
+    font-weight: 550;
+}
