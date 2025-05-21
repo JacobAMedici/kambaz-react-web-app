@@ -50,9 +50,12 @@ export default function Assignments() {
                                             <span
                                                 className="text-danger fw-semibold">Multiple Modules</span>
                                             <span className="mx-1">|</span>
-                                            Not available until May 20 at 12:00am
+                                            <span
+                                                className="fw-semibold"> Not available until </span>May
+                                            20 at 12:00am
                                             <br/>
-                                            Due May 27 at 11:59pm
+                                            <span className="fw-semibold"> Due </span> May 27 at
+                                            11:59pm
                                             <span className="mx-1">|</span>
                                             100 pts
                                         </div>
@@ -78,9 +81,12 @@ export default function Assignments() {
                                             <span
                                                 className="text-danger fw-semibold">Multiple Modules</span>
                                             <span className="mx-1">|</span>
-                                            Not available until May 27 at 12:00am
+                                            <span
+                                                className="fw-semibold"> Not available until </span>May
+                                            27 at 12:00am
                                             <br/>
-                                            Due May 30 at 11:59pm
+                                            <span className="fw-semibold"> Due </span> May 30 at
+                                            11:59pm
                                             <span className="mx-1">|</span>
                                             100 pts
                                         </div>
@@ -106,9 +112,11 @@ export default function Assignments() {
                                             <span
                                                 className="text-danger fw-semibold">Multiple Modules</span>
                                             <span className="mx-1">|</span>
-                                            Not available until June 1 at 12:00am
+                                            <span className="fw-semibold"> Not available until </span>
+                                            June 1 at 12:00am
                                             <br/>
-                                            Due June 7 at 11:59pm
+                                            <span className="fw-semibold"> Due </span> June 7 at
+                                            11:59pm
                                             <span className="mx-1">|</span>
                                             100 pts
                                         </div>
