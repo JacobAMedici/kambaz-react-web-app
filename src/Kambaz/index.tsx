@@ -1,10 +1,10 @@
-import { Routes, Route, Navigate }
-    from "react-router";
+import {Navigate, Route, Routes} from "react-router";
 import Account from "./Account";
 import Dashboard from "./Dashboard";
 import KambazNavigation from "./Navigation";
 import Courses from "./Courses";
 import "./styles.css";
+
 export default function Kambaz() {
     return (
         <div id="wd-kambaz">
@@ -22,3 +22,4 @@ export default function Kambaz() {
         </div>
     );
 }
+
