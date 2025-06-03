@@ -22,8 +22,8 @@ export default function Assignments() {
                         placeholder="Search..."
                     />
                 </div>
-                <button className="btn btn-outline-secondary me-1">+ Group</button>
-                <button className="btn btn-danger">+ Assignment</button>
+                {/*<button className="btn btn-outline-secondary me-1">+ Group</button>*/}
+                {/*<button className="btn btn-danger">+ Assignment</button>*/}
             </div>
             <br/>
 

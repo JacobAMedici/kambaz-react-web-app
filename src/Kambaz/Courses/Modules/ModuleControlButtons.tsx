@@ -23,7 +23,6 @@ export default function ModuleControlButtons({moduleId, deleteModule, editModule
                 </div>
             ) : <div id="wd-module-modifications">
                 <GreenCheckmark/>
-                <FaPlus/>
                 <IoEllipsisVertical className="fs-4"/>
             </div>}
         </div>
