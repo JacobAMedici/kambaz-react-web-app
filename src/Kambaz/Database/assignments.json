@@ -1,5 +1,19 @@
 [
   {
+    "_id": "A100",
+    "title": "Assignment Title",
+    "course": "RS100",
+    "notAvailableUntil": "2024-05-20",
+    "due": "2024-05-31T23:59:00Z",
+    "notAvailableAfter": "2024-05-31T23:59:00Z",
+    "points": 100,
+    "description": "Example",
+    "assignTo": "Everybody",
+    "assignmentGroupAs" : "ASSIGNMENTS",
+    "displayGradeAs": "PERCENTAGE",
+    "submissionType": "ONLINE"
+  },
+  {
     "_id": "A101",
     "title": "Propulsion Assignment",
     "course": "RS101",

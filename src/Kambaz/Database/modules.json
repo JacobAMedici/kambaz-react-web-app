@@ -1,5 +1,18 @@
 [
   {
+    "_id": "M000",
+    "name": "Module Title",
+    "description": "Module Description",
+    "course": "RS100",
+    "lessons": [
+      {
+        "_id": "L100",
+        "name": "Lesson Title",
+        "description": "Lesson Description",
+        "module": "M100"
+      }]
+  },
+  {
     "_id": "M101",
     "name": "Introduction to Rocket Propulsion",
     "description": "Basic principles of rocket propulsion and rocket engines.",

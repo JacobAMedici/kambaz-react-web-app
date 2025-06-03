@@ -1,15 +1,16 @@
 import {BsGripVertical, BsSearch} from "react-icons/bs";
 import {ListGroup} from "react-bootstrap";
-import LessonControlButtons from "../Modules/LessonControlButtons.tsx";
 import {MdAssignment} from "react-icons/md";
 import AssignmentControlButtons from "./AssignmentControlButtons.tsx";
 import {GoTriangleDown} from "react-icons/go";
-import * as db from "../../Database";
 import {useParams} from "react-router";
+import {useSelector} from "react-redux";
+import EachAssignmentControlButtons from "./EachAssignmentControlButtons.tsx";
 
 export default function Assignments() {
-    const assignments = db.assignments;
     const {cid} = useParams();
+    const { assignments } = useSelector((state: any) => state.assignmentReducer);
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
     return (
         <div id="wd-assignments">
             <div className="d-flex align-items-center">
@@ -37,54 +38,57 @@ export default function Assignments() {
                 <ListGroup className="wd-lessons rounded-0">
                     {assignments
                         .filter((assignment: any) => assignment.course === cid)
-                        .map((assignments) => (
-                    <ListGroup.Item className="wd-lesson p-3 ps-1">
-                        {/*I asked ChatGpt how to center align the icons here*/}
-                        <div className="d-flex align-items-center justify-content-between">
-                            <div className="d-flex align-items-center me-3">
-                                <BsGripVertical className="me-2 fs-3"/>
-                                <MdAssignment className="me-2 fs-3" color="green"/>
-                                <div>
-                                    <a
-                                        href={`#/Kambaz/Courses/${cid}/Assignments/${assignments._id}`}
-                                        className="text-dark text-decoration-none"
-                                    >
+                        .map((assignments) => {
+                            const renderAssignmentDetails = () => (
+                                <>
+                                    {assignments.title}
+                                    <div className="text-muted small">
+                                        <span className="text-danger fw-semibold">Multiple Modules</span>
+                                        <span className="mx-1">|</span>
+                                        <span className="fw-semibold"> Not available until </span>
+                                        {new Date(assignments.notAvailableUntil).toLocaleString("en-US", {
+                                            dateStyle: "medium",
+                                            timeStyle: "short",
+                                            timeZone: "UTC",
+                                        })}
+                                        <br />
+                                        <span className="fw-semibold"> Due </span>
+                                        {new Date(assignments.due).toLocaleString("en-US", {
+                                            dateStyle: "medium",
+                                            timeStyle: "short",
+                                            timeZone: "UTC",
+                                        })}
+                                        <span className="mx-1">|</span>
+                                        {assignments.points} pts
+                                    </div>
+                                </>
+                            );
 
-                                        {assignments.title}
-                                        <div className="text-muted small">
-                                            {/*I was going to use div instead of span here,
-                                            but it wasn't working, so I asked ChatGPT and it
-                                            said to use Span so I don't create the new line*/}
-                                            <span
-                                                className="text-danger fw-semibold">Multiple Modules</span>
-                                            <span className="mx-1">|</span>
-                                            <span
-                                                className="fw-semibold"> Not available until </span>
-                                            {/* I asked ChatGPT for the "toLocaleDateString("en-US", { dateStyle: "medium" })" part of this function*/}
-                                            {new Date(assignments.notAvailableUntil).toLocaleString("en-US", {
-                                                dateStyle: "medium",
-                                                timeStyle: "short",
-                                                timeZone: "UTC"
-                                            })}
-
-                                            <br/>
-                                            <span className="fw-semibold"> Due </span>
-                                            {new Date(assignments.due).toLocaleString("en-US", {
-                                                dateStyle: "medium",
-                                                timeStyle: "short",
-                                                timeZone: "UTC"
-                                            })}
-
-                                            <span className="mx-1">|</span>
-                                            {assignments.points} pts
+                            return (
+                                <ListGroup.Item key={assignments._id} className="wd-lesson p-3 ps-1">
+                                    {/*I asked ChatGpt how to center align the icons here*/}
+                                    <div className="d-flex align-items-center justify-content-between">
+                                        <div className="d-flex align-items-center me-3">
+                                            <BsGripVertical className="me-2 fs-3" />
+                                            <MdAssignment className="me-2 fs-3" color="green" />
+                                            <div>
+                                                {currentUser.role === "FACULTY" ? (
+                                                    <a
+                                                        href={`#/Kambaz/Courses/${cid}/Assignments/${assignments._id}`}
+                                                        className="text-dark text-decoration-none"
+                                                    >
+                                                        {renderAssignmentDetails()}
+                                                    </a>
+                                                ) : (
+                                                    renderAssignmentDetails()
+                                                )}
+                                            </div>
                                         </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <LessonControlButtons/>
-                        </div>
-                    </ListGroup.Item>
-                    ))}
+                                        <EachAssignmentControlButtons assignmentId={assignments._id}/>
+                                    </div>
+                                </ListGroup.Item>
+                            );
+                        })}
                 </ListGroup>
             </ListGroup.Item>
         </div>

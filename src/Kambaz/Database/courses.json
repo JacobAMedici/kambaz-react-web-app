@@ -1,5 +1,16 @@
 [
   {
+    "_id": "RS100",
+    "name": "Student Course",
+    "number": "ME100",
+    "startDate": "1970-00-00",
+    "endDate": "9999-00-00",
+    "department": "None",
+    "credits": 100,
+    "description": "For Testing",
+    "author": "654f9ec2ea7ead465908d1e3"
+  },
+  {
     "_id": "RS101",
     "name": "Rocket Propulsion",
     "number": "RS4550",
