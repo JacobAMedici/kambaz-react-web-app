@@ -18,9 +18,9 @@ export default function Dashboard() {
     const renderContent = () => {
         const visibleCourses = toggled
             ? courses
-            : courses.filter((course) =>
+            : courses.filter((course: any) =>
                 enrollments.some(
-                    (enrollment) =>
+                    (enrollment: any) =>
                         enrollment.user === currentUser._id &&
                         enrollment.course === course._id
                 )
@@ -32,9 +32,9 @@ export default function Dashboard() {
     const getCourseNum = () => {
         if (!toggled) {
             return (
-                courses.filter((course) =>
+                courses.filter((course: any) =>
                     enrollments.some(
-                        (enrollment) =>
+                        (enrollment: any) =>
                             enrollment.user === currentUser._id &&
                             enrollment.course === course._id
                     )).length
@@ -160,7 +160,7 @@ export default function Dashboard() {
                     <br/>
                     <FormControl value={course.name} className="mb-2"
                                  onChange={(e) => setCourse({...course, name: e.target.value})}/>
-                    <FormControl value={course.description} rows={3}
+                    <FormControl as="textarea" value={course.description} rows={3}
                                  onChange={(e) => setCourse({
                                      ...course,
                                      description: e.target.value

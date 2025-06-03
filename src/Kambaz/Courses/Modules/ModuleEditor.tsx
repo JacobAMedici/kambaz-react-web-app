@@ -1,24 +1,23 @@
 import {Button, FormControl, Modal} from "react-bootstrap";
+import {useDispatch} from "react-redux";
+import {addModule} from "./reducer.ts";
 import {useParams} from "react-router";
-import { useDispatch } from "react-redux";
 
 export default function ModuleEditor({
                                          show,
                                          handleClose,
                                          dialogTitle,
                                          moduleName,
-                                         setModuleName,
-                                         addModule,
+                                         setModuleName
                                      }: {
     show: boolean;
     handleClose: () => void;
     dialogTitle: string;
     moduleName: string;
     setModuleName: (name: string) => void;
-    addModule: () => void;
 }) {
-    const {cid} = useParams();
     const dispatch = useDispatch();
+    const cid = useParams().cid;
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>

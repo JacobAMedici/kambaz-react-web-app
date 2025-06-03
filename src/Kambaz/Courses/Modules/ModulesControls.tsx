@@ -4,8 +4,8 @@ import { Button, Dropdown } from "react-bootstrap";
 import ModuleEditor from "./ModuleEditor";
 import {useState} from "react";
 export default function ModulesControls(
-    { moduleName, setModuleName, addModule }:
-        { moduleName: string; setModuleName: (title: string) => void; addModule: () => void; }) {
+    { moduleName, setModuleName }:
+        { moduleName: string; setModuleName: (title: string) => void; }) {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -44,6 +44,6 @@ export default function ModulesControls(
                 Collapse All
             </Button>
             <ModuleEditor show={show} handleClose={handleClose} dialogTitle="Add Module"
-                          moduleName={moduleName} setModuleName={setModuleName} addModule={addModule} />
+                          moduleName={moduleName} setModuleName={setModuleName} />
         </div>
     );}

@@ -5,7 +5,7 @@ import ModuleControlButtons from "./ModuleControlButtons";
 import LessonControlButtons from "./LessonControlButtons";
 import {useParams} from "react-router";
 import {useState} from "react";
-import { addModule, editModule, updateModule, deleteModule } from "./reducer";
+import { editModule, updateModule, deleteModule } from "./reducer";
 import { useSelector, useDispatch } from "react-redux";
 
 export default function Modules() {
@@ -16,7 +16,7 @@ export default function Modules() {
 
     return (
         <div>
-            <ModulesControls setModuleName={setModuleName} moduleName={moduleName} addModule={addModule} /><br/><br/><br/><br/>
+            <ModulesControls setModuleName={setModuleName} moduleName={moduleName} /><br/><br/><br/><br/>
             <ListGroup id="wd-modules" className="rounded-0">
                 {modules
                     .filter((module: any) => module.course === cid)

@@ -38,7 +38,7 @@ export default function Assignments() {
                 <ListGroup className="wd-lessons rounded-0">
                     {assignments
                         .filter((assignment: any) => assignment.course === cid)
-                        .map((assignments) => {
+                        .map((assignments : any) => {
                             const renderAssignmentDetails = () => (
                                 <>
                                     {assignments.title}
