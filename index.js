@@ -8,14 +8,12 @@ import session from "express-session";
 import ModuleRoutes from "./Kambaz/Modules/routes.js";
 import Hello from "./Hello.js";
 const app = express();
-const corsOptions = {
-    credentials: true,
-    origin: process.env.NETLIFY_URL || "http://localhost:5173" || "https://kambazjacobmedici.netlify.app",
-};
-// Fix recommended by ChatGPT
-app.options("*", cors(corsOptions));  // Allow preflight across all routes
-app.use(cors(corsOptions));           // Allow actual requests
-
+app.use(
+    cors({
+        credentials: true,
+        origin: process.env.NETLIFY_URL || "http://localhost:5173"
+    })
+);
 const sessionOptions = {
     secret: process.env.SESSION_SECRET || "kambaz",
     resave: false,
