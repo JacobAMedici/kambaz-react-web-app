@@ -1,23 +1,20 @@
 import {Button, FormControl, Modal} from "react-bootstrap";
-import {useDispatch} from "react-redux";
-import {addModule} from "./reducer.ts";
-import {useParams} from "react-router";
 
 export default function ModuleEditor({
                                          show,
                                          handleClose,
                                          dialogTitle,
                                          moduleName,
-                                         setModuleName
+                                         setModuleName,
+                                         onSave,
                                      }: {
     show: boolean;
     handleClose: () => void;
     dialogTitle: string;
     moduleName: string;
     setModuleName: (name: string) => void;
+    onSave: () => void;
 }) {
-    const dispatch = useDispatch();
-    const cid = useParams().cid;
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
@@ -33,7 +30,7 @@ export default function ModuleEditor({
                 <Button variant="secondary" onClick={handleClose}> Cancel </Button>
                 <Button variant="primary"
                         onClick={() => {
-                            dispatch(addModule({ name: moduleName, course: cid }));
+                            onSave();
                             handleClose();
                         }}> Add Module </Button>
             </Modal.Footer>

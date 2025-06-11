@@ -15,7 +15,7 @@ import CounterRedux from "./ReduxExamples/CounterRedux";
 import AddRedux from "./ReduxExamples/AddRedux";
 import TodoList from "./ReduxExamples/todos/TodoList.tsx";
 
-export default function Lab1() {
+export default function Lab4() {
     function sayHello() {
         alert("Hello");
     }

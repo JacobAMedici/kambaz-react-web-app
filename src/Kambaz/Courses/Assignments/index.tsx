@@ -4,13 +4,27 @@ import {MdAssignment} from "react-icons/md";
 import AssignmentControlButtons from "./AssignmentControlButtons.tsx";
 import {GoTriangleDown} from "react-icons/go";
 import {useParams} from "react-router";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import EachAssignmentControlButtons from "./EachAssignmentControlButtons.tsx";
+import * as coursesClient from "../client.ts";
+import {useEffect} from "react";
+import {setAssignments} from "./reducer.ts";
 
 export default function Assignments() {
     const {cid} = useParams();
     const { assignments } = useSelector((state: any) => state.assignmentReducer);
     const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const dispatch = useDispatch();
+
+    const fetchAssignments = async () => {
+        const modules = await coursesClient.findAssignmentsForCourse(cid as string);
+        dispatch(setAssignments(modules));
+    };
+
+    useEffect(() => {
+        fetchAssignments();
+    }, []);
+
     return (
         <div id="wd-assignments">
             <div className="d-flex align-items-center">

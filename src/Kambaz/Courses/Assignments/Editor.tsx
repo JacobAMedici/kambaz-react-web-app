@@ -3,12 +3,23 @@ import {useParams, Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {addAssignment, updateAssignment} from "./reducer";
 import {useEffect, useState} from "react";
+import * as coursesClient from "../client.ts";
 
 export default function AssignmentEditor() {
     const {aid, cid} = useParams();
     const { assignments } = useSelector((state: any) => state.assignmentReducer);
     const assignment = assignments.find((a: any) => a._id === aid);
     const dispatch = useDispatch();
+
+    const createAssignmentForCourse = async (newAssignment: any) => {
+        const assignment = await coursesClient.createAssignmentForCourse(cid as string, newAssignment);
+        dispatch(addAssignment(assignment));
+    };
+
+    const updateAssignmentForCourse = async (newAssignment: any) => {
+        const assignment = await coursesClient.updateAssignmentForCourse(cid as string, newAssignment);
+        dispatch(updateAssignment(assignment));
+    };
 
     // I did not know what the optimal way to extract some of the code out for updating vs adding
     // as assignment, so I took what I had and had ChatGPT help me create the handleSave and
@@ -61,9 +72,9 @@ export default function AssignmentEditor() {
         };
 
         if (aid === "new") {
-            dispatch(addAssignment(newAssignment));
+            createAssignmentForCourse(newAssignment);
         } else {
-            dispatch(updateAssignment(newAssignment));
+            updateAssignmentForCourse(newAssignment);
         }
     };
 

@@ -3,6 +3,7 @@ import { assignments } from "../../Database";
 const initialState = {
     assignments: assignments,
 };
+
 const modulesSlice = createSlice({
     name: "modules",
     initialState,
@@ -31,9 +32,13 @@ const modulesSlice = createSlice({
         deleteAssignment: (state, { payload: assignmentId }) => {
             state.assignments = state.assignments.filter(
                 (a: any) => a._id !== assignmentId);
+        },
+
+        setAssignments: (state, action) => {
+            state.assignments = action.payload;
         }
     },
 });
-export const { addAssignment, deleteAssignment, updateAssignment } =
+export const { addAssignment, deleteAssignment, updateAssignment, setAssignments } =
     modulesSlice.actions;
 export default modulesSlice.reducer;

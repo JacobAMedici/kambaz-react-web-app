@@ -12,11 +12,26 @@ import Zoom from "./Zoom";
 import {FaAlignJustify} from "react-icons/fa";
 import PeopleTable from "./People/Table.tsx";
 import { useParams } from "react-router";
+import {useSelector} from "react-redux";
 
 export default function Courses({ courses }: { courses: any[]; }) {
     const { cid } = useParams();
     const course = courses.find((course) => course._id === cid);
+    const currentUser = useSelector((state: any) => state.accountReducer.currentUser);
+    const { enrollments } = useSelector((state: any) => state.coursesReducer);
     const { pathname } = useLocation();
+
+    if (!currentUser) {
+        return <Navigate to="/Kambaz/Account/Signin" />;
+    }
+
+    const isEnrolled = enrollments?.some(
+        (e: any) => e.user === currentUser._id && e.course === cid
+    );
+
+    if (!isEnrolled) {
+        return <Navigate to="/Kambaz/Dashboard" />;
+    }
 
     return (
         <div id="wd-courses">
