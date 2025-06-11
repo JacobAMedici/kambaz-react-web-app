@@ -8,12 +8,14 @@ import session from "express-session";
 import ModuleRoutes from "./Kambaz/Modules/routes.js";
 import Hello from "./Hello.js";
 const app = express();
-app.use(
-    cors({
-        credentials: true,
-        origin: process.env.NETLIFY_URL || "http://localhost:5173",
-    })
-);
+const corsOptions = {
+    credentials: true,
+    origin: process.env.NETLIFY_URL || "http://localhost:5173",
+};
+// Fix recommended by ChatGPT
+app.options("*", cors(corsOptions));  // Allow preflight across all routes
+app.use(cors(corsOptions));           // Allow actual requests
+
 const sessionOptions = {
     secret: process.env.SESSION_SECRET || "kambaz",
     resave: false,
