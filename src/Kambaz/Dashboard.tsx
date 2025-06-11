@@ -80,9 +80,11 @@ export default function Dashboard() {
                                     <button
                                         onClick={(e) => {
                                             e.preventDefault();
+                                            fetchCourses();
                                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                             // @ts-expect-error
                                             dispatch(deleteCourseAsync(course._id));
+                                            fetchCourses();
                                         }}
                                         className="btn btn-danger"
                                     >
@@ -101,6 +103,7 @@ export default function Dashboard() {
                                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                     // @ts-expect-error
                                     dispatch(unenrollAsync(currentUser._id, course._id));
+                                    fetchCourses();
                                 }}
                             >
                                 Unenroll
@@ -114,6 +117,7 @@ export default function Dashboard() {
                                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                     // @ts-expect-error
                                     dispatch(enrollAsync(currentUser._id, course._id));
+                                    fetchCourses();
                                 }}
                             >
                                 Enroll
@@ -136,9 +140,11 @@ export default function Dashboard() {
                         New Course
                         <button className="btn btn-primary float-end"
                                 onClick={() => {
+                                    fetchCourses();
                                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                     // @ts-expect-error
                                     dispatch(addCourseAsync(course));
+                                    fetchCourses();
                                 }}>
                             Add
                         </button>
@@ -148,6 +154,7 @@ export default function Dashboard() {
                                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                     // @ts-expect-error
                                     dispatch(updateCourseAsync(course));
+                                    fetchCourses();
                                 }}>
                             Update
                         </button>
