@@ -143,9 +143,12 @@ export default function Dashboard() {
                             Add
                         </button>
                         <button className="btn btn-warning float-end me-2"
-                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                            // @ts-expect-error
-                                onClick={() => dispatch(updateCourseAsync(course))}>
+                                onClick={() => {
+                                    fetchCourses();
+                                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                    // @ts-expect-error
+                                    dispatch(updateCourseAsync(course));
+                                }}>
                             Update
                         </button>
                     </h5>

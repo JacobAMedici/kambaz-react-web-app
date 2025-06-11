@@ -75,10 +75,10 @@ const modulesSlice = createSlice({
                 (m: any) => m._id !== cid);
         },
 
-        updateCourse: (state, {payload: course}) => {
-            state.courses = state.courses.map((m: any) =>
-                m._id === course._id ? course : m
-            ) as any;
+        updateCourse: (state, { payload: updated }) => {
+            state.courses = state.courses.map((c: any) =>
+                c._id === updated._id ? updated : c
+            );
         },
 
         enroll: (state, { payload: payload }) => {
