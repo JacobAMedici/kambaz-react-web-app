@@ -7,7 +7,12 @@ import "dotenv/config";
 import session from "express-session";
 import ModuleRoutes from "./Kambaz/Modules/routes.js";
 import Hello from "./Hello.js";
+import mongoose from "mongoose";
 const app = express();
+
+const CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kambaz"
+mongoose.connect(CONNECTION_STRING);
+
 app.use(
     cors({
         credentials: true,

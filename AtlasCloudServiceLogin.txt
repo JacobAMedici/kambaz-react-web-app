@@ -1,0 +1,4 @@
+User: giuseppi
+Pass: supersecretpassword
+URI (1): mongodb+srv://giuseppi:supersecretpassword@kambaz.al4vdhr.mongodb.net/
+URI (2): mongodb+srv://giuseppi:<db_password>@kambaz.al4vdhr.mongodb.net/?retryWrites=true&w=majority&appName=Kambaz
