@@ -3,7 +3,27 @@ import {v4 as uuidv4} from "uuid";
 import * as courseClient from "../Courses/client";
 import * as userClient from "../Account/client";
 
-const initialState = {
+type Course = {
+    _id: string;
+    number: string;
+    startDate: string;
+    endDate: string;
+    department: string;
+    credits: number;
+    author: string;
+};
+
+type Enrollment = {
+    _id: string;
+    user: string;
+    course: string;
+};
+
+
+const initialState: {
+    courses: Course[];
+    enrollments: Enrollment[];
+} = {
     courses: [],
     enrollments: [],
 };
