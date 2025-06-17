@@ -17,34 +17,67 @@ export default function Dashboard() {
     const {currentUser} = useSelector((state: any) => state.accountReducer);
     const dispatch = useDispatch();
 
-    const [course, setCourse] = useState({name: "New Course", description: "New Description"});
-    const [toggled, setToggled] = useState(false);
+    const [course, setCourse] = useState({name: "New Course", description: "New Description", });
+    const [enrolling, setEnrolling] = useState<boolean>(false);
     const {courses} = useSelector((state: any) => state.coursesReducer);
-    const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
 
-    const fetchCourses = async () => {
+    // I was having issues with checking if the class actually exists in enrollments, so I used
+    // ChatGPT to help me create this function
+    const findCoursesForUser = async () => {
         try {
-            const all = await courseClient.fetchAllCourses();
-            const enrolled = await userClient.findMyCourses();
-            dispatch(setCourses(all));
-            setEnrolledCourses(enrolled);
-        } catch (e) {
-            console.error(e);
+            const allCourses = await courseClient.fetchAllCourses();
+            const enrolledCourses = await userClient.findCoursesForUser(currentUser._id);
+
+            if (enrolledCourses.length === 0) {
+                dispatch(setCourses([]));
+                return;
+            } else {
+                const validCourseIds = new Set(allCourses.map((c: any) => c._id));
+                const validEnrollments = (enrolledCourses || [])
+                    .filter((c: any) => c && validCourseIds.has(c._id));
+
+                dispatch(setCourses(validEnrollments));
+            }
+        } catch (error) {
+            console.error(error);
         }
     };
 
 
+    const fetchCourses = async () => {
+        try {
+            const allCourses = await courseClient.fetchAllCourses();
+            const enrolledCourses = await userClient.findCoursesForUser(currentUser._id) || [];
+
+            const validCourseIds = new Set(allCourses.map((c: any) => c._id));
+
+            const validEnrollments = enrolledCourses
+                .filter((c: any) => c && validCourseIds.has(c._id));
+
+            const courses = allCourses.map((course: any) => {
+                if (validEnrollments.find((c: any) => c && c._id === course._id)) {
+                    return { ...course, enrolled: true };
+                } else {
+                    return course;
+                }
+            });
+
+            dispatch(setCourses(courses));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     useEffect(() => {
-        fetchCourses();
-    }, [currentUser]);
+        // console.log(enrollments)
+        if (enrolling) {
+            fetchCourses();
+        } else {
+            findCoursesForUser();
+        }
+    }, [enrolling, currentUser]);
 
-    const isEnrolled = (courseId: string) =>
-        enrolledCourses.some((course) => course._id === courseId);
-
-    const getVisibleCourses = () =>
-        toggled ? courses : enrolledCourses;
-
-    const getCourseNum = () => getVisibleCourses().length;
+    const getCourseNum = () => courses.length;
 
     // From here below I used ChatGPT to refactor the code because, to implement the functionality
     // of toggling between all courses and enrolled courses, I needed to simplify the rendering
@@ -78,13 +111,16 @@ export default function Dashboard() {
                                         Edit
                                     </button>
                                     <button
-                                        onClick={(e) => {
+                                        onClick={async (e) => {
                                             e.preventDefault();
-                                            fetchCourses();
                                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                             // @ts-expect-error
-                                            dispatch(deleteCourseAsync(course._id));
-                                            fetchCourses();
+                                            await dispatch(deleteCourseAsync(course._id));
+                                            if (enrolling) {
+                                                fetchCourses();
+                                            } else {
+                                                findCoursesForUser();
+                                            }
                                         }}
                                         className="btn btn-danger"
                                     >
@@ -94,16 +130,19 @@ export default function Dashboard() {
                             )}
                         </div>
 
-                        {isEnrolled(course._id) ? (
+                        {(course.enrolled || !enrolling) ? (
                             <button
                                 className="btn btn-danger mt-2"
-                                onClick={(e) => {
+                                onClick={async (e) => {
                                     e.preventDefault();
-                                    fetchCourses();
                                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                     // @ts-expect-error
-                                    dispatch(unenrollAsync(currentUser._id, course._id));
-                                    fetchCourses();
+                                    await dispatch(unenrollAsync(currentUser._id, course._id));
+                                    if (enrolling) {
+                                        fetchCourses();
+                                    } else {
+                                        findCoursesForUser();
+                                    }
                                 }}
                             >
                                 Unenroll
@@ -111,13 +150,19 @@ export default function Dashboard() {
                         ) : (
                             <button
                                 className="btn btn-success mt-2"
-                                onClick={(e) => {
+                                onClick={async (e) => {
+                                    // console.log("COURSE._ID", course._id);
+                                    // console.log("ENROLLED.COURSE", course.enrolled);
+                                    // console.log("User_ID", currentUser._id);
                                     e.preventDefault();
-                                    fetchCourses();
                                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                     // @ts-expect-error
-                                    dispatch(enrollAsync(currentUser._id, course._id));
-                                    fetchCourses();
+                                    await dispatch(enrollAsync(currentUser._id, course._id));
+                                    if (enrolling) {
+                                        fetchCourses();
+                                    } else {
+                                        findCoursesForUser();
+                                    }
                                 }}
                             >
                                 Enroll
@@ -139,22 +184,28 @@ export default function Dashboard() {
                     <h5>
                         New Course
                         <button className="btn btn-primary float-end"
-                                onClick={() => {
-                                    fetchCourses();
+                                onClick={async () => {
                                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                     // @ts-expect-error
-                                    dispatch(addCourseAsync(course));
-                                    fetchCourses();
+                                    await dispatch(addCourseAsync(course, currentUser._id));
+                                    if (enrolling) {
+                                        fetchCourses();
+                                    } else {
+                                        findCoursesForUser();
+                                    }
                                 }}>
                             Add
                         </button>
                         <button className="btn btn-warning float-end me-2"
-                                onClick={() => {
-                                    fetchCourses();
+                                onClick={async () => {
                                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                     // @ts-expect-error
-                                    dispatch(updateCourseAsync(course));
-                                    fetchCourses();
+                                    await dispatch(updateCourseAsync(course));
+                                    if (enrolling) {
+                                        fetchCourses();
+                                    } else {
+                                        findCoursesForUser();
+                                    }
                                 }}>
                             Update
                         </button>
@@ -177,14 +228,14 @@ export default function Dashboard() {
 
             <h2 id="wd-dashboard-published">
                 Published Courses ({getCourseNum()})
-                <button className="btn btn-primary float-end" onClick={() => setToggled(!toggled)}>
-                    {toggled ? "Enrolled Only" : "All Courses"}
+                <button className="btn btn-primary float-end" onClick={() => setEnrolling(!enrolling)}>
+                    {enrolling ? "Enrolled Only" : "All Courses"}
                 </button>
             </h2>
             <hr/>
             <div id="wd-dashboard-courses">
                 <Row xs={1} md={5} className="g-4">
-                    {getVisibleCourses().map(renderCourseCard)}
+                    {courses.map(renderCourseCard)}
                 </Row>
             </div>
         </div>

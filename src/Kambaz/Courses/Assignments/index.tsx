@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import EachAssignmentControlButtons from "./EachAssignmentControlButtons.tsx";
 import * as coursesClient from "../client.ts";
 import {useEffect} from "react";
-import {setAssignments} from "./reducer.ts";
+import {loadAssignments, setAssignments} from "./reducer.ts";
 
 export default function Assignments() {
     const {cid} = useParams();
@@ -23,7 +23,12 @@ export default function Assignments() {
 
     useEffect(() => {
         fetchAssignments();
+        if (cid) {
+            // I was getting an error and this is what ChatGPT recommended
+            (dispatch as any)(loadAssignments(cid));
+        }
     }, []);
+
 
     return (
         <div id="wd-assignments">

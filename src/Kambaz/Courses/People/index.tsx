@@ -1,8 +1,10 @@
-import PeopleTable from "./Table.tsx";
+import Users from "../../Account/Users.tsx";
+import {useParams} from "react-router";
 
 export default function People () {
+    const {cid} = useParams();
     return (
         <div id="wd-people">
-            <PeopleTable />
+            <Users courseId={cid}/>
         </div>
     );}

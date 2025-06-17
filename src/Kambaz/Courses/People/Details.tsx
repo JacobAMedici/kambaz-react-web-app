@@ -37,8 +37,6 @@ export default function PeopleDetails() {
         navigate(-1);
     };
 
-
-
     if (!uid) return null;
     return (
         <div

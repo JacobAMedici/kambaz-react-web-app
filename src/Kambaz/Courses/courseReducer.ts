@@ -1,20 +1,20 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {courses, enrollments} from "../Database";
 import {v4 as uuidv4} from "uuid";
 import * as courseClient from "../Courses/client";
 import * as userClient from "../Account/client";
 
 const initialState = {
-    courses: courses,
-    enrollments: enrollments
+    courses: await courseClient.fetchAllCourses(),
+    enrollments: await userClient.findAllEnrollments(),
 };
 
 // The following three functions were generated with the help of ChatGPT as I did not know
 // how to implement them properly using the reading due to my implementation
-export const addCourseAsync = (course: any) => async (dispatch: any) => {
+export const addCourseAsync = (course: any, userId: string) => async (dispatch: any) => {
     try {
-        const newCourse = await userClient.createCourse(course);
-        dispatch(addCourse(newCourse));
+        const newCourse = await courseClient.createCourse(course);
+        await dispatch(addCourse(newCourse));
+        await dispatch(enrollAsync(userId, newCourse._id));
     } catch (e) {
         console.error("Failed to add course", e);
     }
@@ -39,18 +39,22 @@ export const updateCourseAsync = (course: any) => async (dispatch: any) => {
 };
 
 export const enrollAsync = (userId: string, courseId: string) => async (dispatch: any) => {
+    // console.log("Unenrolling user:", userId, "from course:", courseId);
     try {
         await userClient.enrollInCourse(userId, courseId);
-        dispatch(enroll({ userId, cid: courseId }));
+        await dispatch(enroll({ userId, courseId }));
+        console.log("Successfully enrolled")
     } catch (e) {
         console.error("Failed to enroll", e);
     }
 };
 
 export const unenrollAsync = (userId: string, courseId: string) => async (dispatch: any) => {
+    // console.log("Unenrolling user:", userId, "from course:", courseId);
     try {
         await userClient.unenrollFromCourse(userId, courseId);
-        dispatch(unenroll({ userId, cid: courseId }));
+        await dispatch(unenroll({ userId, courseId }));
+        // console.log(initialState.enrollments)
     } catch (e) {
         console.error("Failed to unenroll", e);
     }
@@ -66,8 +70,18 @@ const modulesSlice = createSlice({
             state.courses = action.payload;
         },
 
-        addCourse: (state, {payload: course}) => {
-            state.courses = [...state.courses, {...course, _id: uuidv4()}] as any;
+        addCourse: (state, { payload: course }) => {
+            const newCourse = {
+                ...course,
+                _id: course._id || uuidv4(),
+                number: course.number || "",
+                startDate: course.startDate || new Date().toISOString(),
+                endDate: course.endDate || new Date().toISOString(),
+                department: course.department || "",
+                credits: course.credits || 0,
+                author: "",
+            };
+            state.courses = [...state.courses, newCourse];
         },
 
         deleteCourse: (state, {payload: cid}) => {
@@ -84,15 +98,18 @@ const modulesSlice = createSlice({
         enroll: (state, { payload: payload }) => {
             const alreadyEnrolled = state.enrollments.some(
                 (enrollment: any) =>
-                    enrollment.user === payload.userId && enrollment.course === payload.cid
+                    enrollment.user === payload.userId && enrollment.course === payload.courseId
             );
+
+            // console.log(alreadyEnrolled)
+            // console.log(state.enrollments);
 
             if (!alreadyEnrolled) {
                 state.enrollments = [...state.enrollments,
                     {
-                        _id: uuidv4(),
+                        _id: `${payload.userId}-${payload.courseId}`,
                         user: payload.userId,
-                        course: payload.cid
+                        course: payload.courseId
                     }
                 ] as any;
             }
@@ -101,7 +118,7 @@ const modulesSlice = createSlice({
         unenroll: (state, {payload: payload}) => {
             state.enrollments = state.enrollments.filter(
                 (enrollment: any) =>
-                    !(enrollment.user === payload.userId && enrollment.course === payload.cid)
+                    !(enrollment.user === payload.userId && enrollment.course === payload.courseId)
             );
         },
 

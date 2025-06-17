@@ -43,7 +43,7 @@ export default function UserRoutes(app) {
         if (currentUser && currentUser._id === userId) {
             req.session["currentUser"] = { ...currentUser, ...userUpdates };
         }
-        res.json(currentUser);
+        res.json(req.session["currentUser"]);
     };
 
     const signup = async (req, res) => {
@@ -53,12 +53,14 @@ export default function UserRoutes(app) {
                 {message: "Username already in use"});
             return;
         }
-        const currentUser = dao.createUser(req.body);
+        const currentUser = await dao.createUser(req.body);
+        // console.log("Signup response:", currentUser);
         req.session["currentUser"] = currentUser;
         res.json(currentUser);
     };
 
     const signin = async (req, res) => {
+        console.log("Signin")
         const {username, password} = req.body;
         const currentUser = await dao.findUserByCredentials(username, password);
         if (currentUser) {
@@ -102,18 +104,52 @@ export default function UserRoutes(app) {
         res.json(newCourse);
     };
 
+    const findCoursesForUser = async (req, res) => {
+        // console.log("Finding Courses")
+        const currentUser = req.session["currentUser"];
+        if (!currentUser) {
+            res.sendStatus(401);
+            return;
+        }
+        if (currentUser.role === "ADMIN") {
+            const courses = await courseDao.findAllCourses();
+            res.json(courses);
+            return;
+        }
+        let { uid } = req.params;
+        if (uid === "current") {
+            uid = currentUser._id;
+        }
+        const courses = await enrollmentsDao.findCoursesForUser(uid);
+        res.json(courses);
+    };
+
+    // I was getting an error I didn't know how to fix and ChatGPT recommended some slight changes
+    // to these methods
     app.post("/api/users/enrollments", async (req, res) => {
-        const {userId, courseId} = req.body;
-        const enrollment = await enrollmentsDao.enroll(userId, courseId);
-        res.json(enrollment);
-    });
-    app.delete("/api/users/enrollments", async (req, res) => {
+        // console.log("Enrolling in course");
         const { userId, courseId } = req.body;
-        const status = await enrollmentsDao.unenroll(userId, courseId);
-        res.json(status);
+        try {
+            const enrollment = await enrollmentsDao.enroll(userId, courseId);
+            res.json(enrollment);
+        } catch (e) {
+            res.status(500).json({ error: e.message });
+        }
     });
+
+    app.delete("/api/users/enrollments", async (req, res) => {
+        // console.log("Unenrolling in course");
+        const { userId, courseId } = req.body;
+        try {
+            const status = await enrollmentsDao.unenroll(userId, courseId);
+            res.json(status);
+        } catch (e) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
     app.post("/api/users/current/courses", createCourse);
-    app.get("/api/users/:userId/courses", findCoursesForEnrolledUser);
+    app.get("/api/users/:uid/courses", findCoursesForUser);
     app.post("/api/users", createUser);
     app.get("/api/users", findAllUsers);
     app.get("/api/users/:userId", findUserById);

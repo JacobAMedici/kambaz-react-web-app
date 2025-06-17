@@ -2,15 +2,16 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import PeopleTable from "../Courses/People/Table";
 import * as client from "./client";
+import * as courseClient from "../Courses/client";
 import {FormControl} from "react-bootstrap";
 import {FaPlus} from "react-icons/fa6";
-export default function Users() {
+
+export default function Users({ courseId }: { courseId: any }) {
     const { uid } = useParams();
     const [users, setUsers] = useState<any[]>([])
     const [role, setRole] = useState("");
-    const [name, setName] = useState("");
+
     const filterUsersByName = async (name: string) => {
-        setName(name);
         if (name) {
             const users = await client.findUsersByPartialName(name);
             setUsers(users);
@@ -18,6 +19,15 @@ export default function Users() {
             fetchUsers();
         }
     };
+
+    const filterUsersByCourse = async () => {
+        if (courseId) {
+            const users = await courseClient.findUsersForCourse(courseId);
+            setUsers(users);
+        } else {
+            fetchUsers();
+        }
+    }
 
     const filterUsersByRole = async (role: string) => {
         setRole(role);
@@ -33,8 +43,13 @@ export default function Users() {
         const users = await client.findAllUsers();
         setUsers(users);
     };
+
     useEffect(() => {
-        fetchUsers();
+        if (courseId) {
+            filterUsersByCourse();
+        } else {
+            fetchUsers();
+        }
     }, [uid]);
 
     const createUser = async () => {

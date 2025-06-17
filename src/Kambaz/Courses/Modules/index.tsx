@@ -1,4 +1,4 @@
-import {FormControl, ListGroup} from "react-bootstrap";
+import {ListGroup} from "react-bootstrap";
 import {BsGripVertical} from "react-icons/bs";
 import ModulesControls from "./ModulesControls";
 import ModuleControlButtons from "./ModuleControlButtons";
@@ -23,24 +23,25 @@ export default function Modules() {
     useEffect(() => {
         fetchModules();
     }, []);
-    const removeModule = async (moduleId: string) => {
-        await modulesClient.deleteModule(moduleId);
-        dispatch(deleteModule(moduleId));
-    };
     const createModuleForCourse = async () => {
         if (!cid) return;
-        const newModule = { name: moduleName, course: cid, _id:  uuidv4()};
+        const newModule = {name: moduleName, course: cid, _id: uuidv4()};
         const module = await coursesClient.createModuleForCourse(cid, newModule);
         dispatch(addModule(module));
     };
-    const saveModule = async (module: any) => {
+    const deleteModuleHandler = async (moduleId: string) => {
+        await modulesClient.deleteModule(moduleId);
+        dispatch(deleteModule(moduleId));
+    };
+    const updateModuleHandler = async (module: any) => {
         await modulesClient.updateModule(module);
         dispatch(updateModule(module));
     };
 
     return (
         <div>
-            <ModulesControls setModuleName={setModuleName} moduleName={moduleName} addModule={createModuleForCourse} /><br/><br/><br/><br/>
+            <ModulesControls setModuleName={setModuleName} moduleName={moduleName}
+                             addModule={createModuleForCourse}/><br/><br/><br/><br/>
             <ListGroup id="wd-modules" className="rounded-0">
                 {modules
                     .map((module: any) => (
@@ -49,25 +50,17 @@ export default function Modules() {
                                 <BsGripVertical className="me-2 fs-3"/>
                                 {!module.editing && module.name}
                                 {module.editing && (
-                                    <FormControl className="w-50 d-inline-block"
-                                                 onChange={(e) =>
-                                                     dispatch(
-                                                         updateModule({
-                                                             ...module,
-                                                             name: e.target.value
-                                                         })
-                                                     )
-                                                 }
-                                                 onKeyDown={(e) => {
-                                                     if (e.key === "Enter") {
-                                                         saveModule({ ...module, editing: false });
-                                                     }
-
-                                                 }}
-                                                 defaultValue={module.name}/>
+                                    <input onChange={(e) =>
+                                        updateModuleHandler({ ...module, name: e.target.value }) }
+                                           onKeyDown={(e) => {
+                                               if (e.key === "Enter") {
+                                                   updateModuleHandler({ ...module, editing: false });
+                                               }
+                                           }}
+                                           value={module.name}/>
                                 )}
                                 <ModuleControlButtons moduleId={module._id}
-                                                      deleteModule={(moduleId) => removeModule(moduleId)}
+                                                      deleteModule={(moduleId) => deleteModuleHandler(moduleId)}
                                                       editModule={(moduleId) => dispatch(editModule(moduleId))}/>
                             </div>
                             {module.lessons && (
@@ -80,60 +73,4 @@ export default function Modules() {
                                     ))}</ListGroup>)}</ListGroup.Item>))}</ListGroup>
         </div>
     );
-
-
-    /*            <ListGroup className="rounded-0" id="wd-modules" style={{ width: 625}}>
-    <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
-        <div className="wd-title p-3 ps-2 bg-secondary">
-            <BsGripVertical className="me-2 fs-3" /> Week 1 <ModuleControlButtons />
-        </div>
-        <ListGroup className="wd-lessons rounded-0">
-            <ListGroup.Item className="wd-lesson p-3 ps-1">
-                <BsGripVertical className="me-2 fs-3" /> LEARNING OBJECTIVES <LessonControlButtons />
-            </ListGroup.Item>
-            <ListGroup.Item className="wd-lesson p-3 ps-1">
-                <BsGripVertical className="me-2 fs-3" /> READINGS <LessonControlButtons />
-            </ListGroup.Item>
-            <ListGroup.Item className="wd-lesson p-3 ps-1">
-                <BsGripVertical className="me-2 fs-3" /> ASSIGNMENTS <LessonControlButtons />
-            </ListGroup.Item>
-        </ListGroup>
-    </ListGroup.Item>
-
-
-    <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
-        <div className="wd-title p-3 ps-2 bg-secondary">
-            <BsGripVertical className="me-2 fs-3" /> Week 2 <ModuleControlButtons />
-        </div>
-        <ListGroup className="wd-lessons rounded-0">
-            <ListGroup.Item className="wd-lesson p-3 ps-1">
-                <BsGripVertical className="me-2 fs-3" /> LEARNING OBJECTIVES <LessonControlButtons />
-            </ListGroup.Item>
-            <ListGroup.Item className="wd-lesson p-3 ps-1">
-                <BsGripVertical className="me-2 fs-3" /> READINGS <LessonControlButtons />
-            </ListGroup.Item>
-            <ListGroup.Item className="wd-lesson p-3 ps-1">
-                <BsGripVertical className="me-2 fs-3" /> ASSIGNMENTS <LessonControlButtons />
-            </ListGroup.Item>
-        </ListGroup>
-    </ListGroup.Item>
-
-
-    <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
-        <div className="wd-title p-3 ps-2 bg-secondary">
-            <BsGripVertical className="me-2 fs-3" /> Week 3 <ModuleControlButtons />
-        </div>
-        <ListGroup className="wd-lessons rounded-0">
-            <ListGroup.Item className="wd-lesson p-3 ps-1">
-                <BsGripVertical className="me-2 fs-3" /> LEARNING OBJECTIVES <LessonControlButtons />
-            </ListGroup.Item>
-            <ListGroup.Item className="wd-lesson p-3 ps-1">
-                <BsGripVertical className="me-2 fs-3" /> READINGS <LessonControlButtons />
-            </ListGroup.Item>
-            <ListGroup.Item className="wd-lesson p-3 ps-1">
-                <BsGripVertical className="me-2 fs-3" /> ASSIGNMENTS <LessonControlButtons />
-            </ListGroup.Item>
-        </ListGroup>
-    </ListGroup.Item>
-    </ListGroup>*/
 }

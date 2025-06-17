@@ -7,8 +7,8 @@ import "./styles.css";
 import {ProtectedRoute} from "./Account/ProtectedRoute.tsx";
 import {useSelector} from "react-redux";
 import Session from "./Account/Session";
-import * as userClient from "./Account/client";
 import {useEffect, useState} from "react";
+import * as courseClient from "./Courses/client";
 
 export default function Kambaz() {
     const [courses, setCourses] = useState<any[]>([]);
@@ -16,7 +16,7 @@ export default function Kambaz() {
 
     const fetchCourses = async () => {
         try {
-            const courses = await userClient.findMyCourses();
+            const courses = await courseClient.fetchAllCourses();
             setCourses(courses);
         } catch (error) {
             console.error(error);

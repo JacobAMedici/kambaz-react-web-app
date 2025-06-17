@@ -1,48 +1,37 @@
-import Database from "../Database/index.js";
+import model from "./model.js";
+import {v4 as uuidv4} from "uuid";
 
-// TODO: Add CRUD Here
 export function createAssignment(courseId, assignment) {
     const newAssignment = {
         ...assignment,
         course: courseId,
-        id: Database.assignments.length + 1, // Simple ID generation
+        id: uuidv4(),
     };
-    Database.assignments.push(newAssignment);
-    return newAssignment;
+    return model.create(newAssignment);
 }
 
-export function findAllAssignments(courseId) {
-    return Database.assignments.filter(assignment => assignment.course === courseId);
+export async function findAllAssignments(courseId) {
+    return model.find({ course: courseId });
 }
 
-export function updateAssignment(courseId, updatedAssignment, aid) {
-    const assignmentIndex = Database.assignments.findIndex(
-        (assignment) =>
-            assignment._id === aid && assignment.course === courseId
+// I wasn't sure what the best way to implement this one was, so I got some help from chat for the
+// findOneAndUpdate
+export async function updateAssignment(courseId, updatedAssignment, aid) {
+    return model.findOneAndUpdate(
+        { _id: aid, course: courseId },
+        { $set: updatedAssignment },
+        { new: true }
     );
-
-    if (assignmentIndex !== -1) {
-        Database.assignments[assignmentIndex] = {
-            ...Database.assignments[assignmentIndex],
-            ...updatedAssignment,
-        };
-        return Database.assignments[assignmentIndex];
-    }
-
-    return null;
 }
 
-// This function was generated with Github Copilot
-export function deleteAssignment(courseId, aid) {
-    const assignmentIndex = Database.assignments.findIndex(
-        (assignment) =>
-            assignment._id === aid && assignment.course === courseId
-    );
+// Same with this one, generated in part with ChatGPT
+export async function deleteAssignment(courseId, aid) {
+    const result = await model.deleteOne({ _id: aid, course: courseId });
 
-    if (assignmentIndex !== -1) {
-        Database.assignments.splice(assignmentIndex, 1);
+    if (result.deletedCount === 1) {
         return { status: "success", message: "Assignment deleted successfully" };
+    } else {
+        return { status: "error", message: "Assignment not found" };
     }
-
-    return { status: "error", message: "Assignment not found" };
 }
+

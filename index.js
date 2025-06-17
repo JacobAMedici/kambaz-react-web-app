@@ -12,6 +12,7 @@ const app = express();
 
 const CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kambaz"
 mongoose.connect(CONNECTION_STRING);
+app.use(express.json());
 
 app.use(
     cors({
@@ -33,7 +34,6 @@ if (process.env.NODE_ENV !== "development") {
     };
 }
 app.use(session(sessionOptions));
-app.use(express.json());
 
 UserRoutes(app);
 CourseRoutes(app)

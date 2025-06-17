@@ -10,6 +10,9 @@ export default function Signup() {
     const dispatch = useDispatch();
     const signup = async () => {
         const currentUser = await client.signup(user);
+        setTimeout(() => {
+            console.log("User after 100ms:", currentUser);
+        }, 100);
         dispatch(setCurrentUser(currentUser));
         navigate("/Kambaz/Account/Profile");
     };

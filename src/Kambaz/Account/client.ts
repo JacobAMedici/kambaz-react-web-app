@@ -6,7 +6,7 @@ export const USERS_API = `${REMOTE_SERVER}/api/users`;
 export const COURSES_API = `${REMOTE_SERVER}/api/courses`;
 
 export const signin = async (credentials: any) => {
-    console.log("Signin")
+    // console.log("Signin")
     const response = await axiosWithCredentials.post(`${USERS_API}/signin`, credentials);
     return response.data;
 };
@@ -27,12 +27,14 @@ export const signout = async () => {
 };
 
 export const updateUser = async (user: any) => {
+    // console.log("Updating user (first):", user);
     const response = await axiosWithCredentials.put(`${USERS_API}/${user._id}`, user);
+    // console.log("Updating user:", response.data);
     return response.data;
 };
 
 export const fetchAllCourses = async () => {
-    const { data } = await axios.get(COURSES_API);
+    const { data } = await axiosWithCredentials.get(COURSES_API);
     return data;
 };
 
@@ -49,8 +51,8 @@ export const createCourse = async (course: any) => {
 // I wasn't sure how to use the data here for deleting or what the best way to route this was,
 // so I used ChatGPT for those parts of these functions
 export const enrollInCourse = async (userId: string, courseId: string) => {
-    console.log("Enrolling in course", userId, courseId);
-    const { data } = await axios.post(`${USERS_API}/enrollments`, {
+    // console.log("Enrolling in course", userId, courseId);
+    const { data } = await axiosWithCredentials.post(`${USERS_API}/enrollments`, {
         userId,
         courseId,
     });
@@ -58,8 +60,8 @@ export const enrollInCourse = async (userId: string, courseId: string) => {
 };
 
 export const unenrollFromCourse = async (userId: string, courseId: string) => {
-    console.log("Un in course", userId, courseId);
-    const { data } = await axios.delete(`${USERS_API}/enrollments`, {
+    // console.log("Unenroll in course", userId, courseId);
+    const { data } = await axiosWithCredentials.delete(`${USERS_API}/enrollments`, {
         data: { userId, courseId },
     });
     return data;
@@ -91,7 +93,18 @@ export const deleteUser = async (userId: string) => {
     return response.data;
 };
 
+export const findCoursesForUser = async (userId: string) => {
+    const response = await axiosWithCredentials.get(`${USERS_API}/${userId}/courses`);
+    return response.data;
+};
+
+export const findAllEnrollments = async () => {
+    const { data } = await axiosWithCredentials.get(COURSES_API);
+    return data;
+};
+
 export const createUser = async (user: any) => {
     const response = await axios.post(`${USERS_API}`, user);
     return response.data;
 };
+

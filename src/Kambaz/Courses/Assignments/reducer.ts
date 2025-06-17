@@ -1,7 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { assignments } from "../../Database";
+import * as courseClient from "../client.ts";
+
 const initialState = {
-    assignments: assignments,
+    assignments: [],
+};
+
+// This was recommended by ChatGPT to handle async actions
+export const loadAssignments = (courseId: any) => async (dispatch: any) => {
+    const assignments = await courseClient.findAssignmentsForCourse(courseId);
+    dispatch(setAssignments(assignments));
 };
 
 const modulesSlice = createSlice({
