@@ -4,7 +4,7 @@ import {Button, Card, Col, FormControl, Row} from "react-bootstrap";
 import {
     addCourseAsync,
     deleteCourseAsync,
-    enrollAsync,
+    enrollAsync, loadInitialState,
     setCourses,
     unenrollAsync,
     updateCourseAsync
@@ -69,6 +69,7 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
+       loadInitialState();
         // console.log(enrollments)
         if (enrolling) {
             fetchCourses();

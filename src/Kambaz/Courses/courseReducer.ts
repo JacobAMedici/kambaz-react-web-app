@@ -4,9 +4,22 @@ import * as courseClient from "../Courses/client";
 import * as userClient from "../Account/client";
 
 const initialState = {
-    courses: await courseClient.fetchAllCourses(),
-    enrollments: await userClient.findAllEnrollments(),
+    courses: [],
+    enrollments: [],
 };
+
+export const loadInitialState = () => async (dispatch: any) => {
+    try {
+        const courses = await courseClient.fetchAllCourses();
+        const enrollments = await userClient.findAllEnrollments();
+
+        dispatch(setCourses(courses));
+        dispatch(setEnrollments(enrollments)); // You need to create this reducer
+    } catch (e) {
+        console.error("Failed to load initial state", e);
+    }
+};
+
 
 // The following three functions were generated with the help of ChatGPT as I did not know
 // how to implement them properly using the reading due to my implementation
@@ -122,8 +135,11 @@ const modulesSlice = createSlice({
             );
         },
 
+        setEnrollments: (state, action) => {
+            state.enrollments = action.payload;
+        },
     },
 });
-export const {setCourses, addCourse, deleteCourse, updateCourse, enroll, unenroll} =
+export const {setCourses, addCourse, deleteCourse, updateCourse, enroll, unenroll, setEnrollments} =
     modulesSlice.actions;
 export default modulesSlice.reducer;
